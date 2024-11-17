@@ -1,23 +1,24 @@
-# Step 1: Use a Node.js base image to build the app
+# Step 1: Use Node.js base image for building the app
 FROM node:16 AS builder
 
-# Step 2: Set the working directory
+# Step 2: Set working directory
 WORKDIR /app
 
-# Step 3: Copy package files and install dependencies
+# Step 3: Copy only package files first
 COPY package.json package-lock.json ./
-RUN npm install
 
-# Step 4: Copy the rest of the application code
+# Step 4: Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Step 5: Copy the rest of the application code
 COPY . .
 
-# Step 5: Build the static files
+# Step 6: Build the React app
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
-# Step 6: Use a lightweight web server (Nginx) to serve the files
+# Step 7: Use a lightweight Nginx image to serve the built files
 FROM nginx:alpine
-
-# Step 7: Copy the build output to Nginx's default web directory
 COPY --from=builder /app/build /usr/share/nginx/html
 
 # Step 8: Expose port 80 for the web server
