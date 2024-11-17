@@ -5,3 +5,5 @@
 *.exe
 .terraform/
 *.exe
+.terraform/
+*.exe
