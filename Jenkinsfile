@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         AWS_REGION = 'us-east-1' // Update this to your AWS region
-        ECR_REPO_NAME = 'devops-portfolio'
+        ECR_REPO_NAME = '340752833412.dkr.ecr.us-east-1.amazonaws.com/devops-portfolio-webapp'
     }
     stages {
         stage('Clone Repository') {
@@ -35,5 +35,12 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            echo 'Pipeline completed!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
 }
-
