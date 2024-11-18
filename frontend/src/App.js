@@ -18,24 +18,30 @@ function App() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload on form submission
 
-    // Make API call to submit feedback
-    fetch(`${process.env.REACT_APP_API_URL}/feedback`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ feedback }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("Thank you for your feedback!");
-          setFeedback(""); // Clear the form
-        } else {
-          alert("Failed to submit feedback. Please try again later.");
-        }
-      })
-      .catch((error) => console.error("Error:", error));
+    console.log("Submitting feedback:", feedback); // Debug log for feedback submission
+    const apiUrl = `${process.env.REACT_APP_API_URL}/feedback`;
+    console.log("API URL:", apiUrl); // Debug log for the API URL
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ feedback }),
+      });
+
+      console.log("Response status:", response.status); // Log the response status
+      if (response.ok) {
+        alert("Thank you for your feedback!");
+        setFeedback(""); // Clear the form
+      } else {
+        alert("Failed to submit feedback. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
   };
 
   return (
@@ -58,3 +64,4 @@ function App() {
 }
 
 export default App;
+
